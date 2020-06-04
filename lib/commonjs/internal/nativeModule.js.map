@@ -1,0 +1,1 @@
+{"version":3,"sources":["nativeModule.ts"],"names":["ReactMds","NativeModules"],"mappings":";;;;;;;AAAA;;AAGA,MAAMA,QAA8B,GAAGC,2BAAcD,QAArD;eACeA,Q","sourcesContent":["import {NativeModules} from 'react-native';\nimport {ReactMdsNativeModule} from './privateTypes';\n\nconst ReactMds: ReactMdsNativeModule = NativeModules.ReactMds;\nexport default ReactMds;\n"]}

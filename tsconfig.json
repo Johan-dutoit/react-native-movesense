@@ -1,0 +1,13 @@
+{
+  "include": ["src/**/*.ts"],
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "CommonJS",
+    "strict": true,
+    "moduleResolution": "Node",
+    "lib": ["dom", "esnext"],
+    "jsx": "react-native",
+    "skipLibCheck": true
+  },
+  "exclude": ["node_modules"]
+}
