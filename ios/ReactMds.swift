@@ -5,12 +5,21 @@ public final class ReactMds: RCTEventEmitter {
     let mds = MdsService()
     var subscriptions: Dictionary<String, String>  = [:]
 
+  
     override init() {
         super.init()
     }
     
-    @objc open override func supportedEvents() -> [String] {
-        var allEventNames: [String] = ["newScannedDevice", "newNotification", "newNotificationError"]
+    public override static func moduleName() -> String! {
+        return "ReactNativeMovesense";
+    }
+    
+    public override static func requiresMainQueueSetup() -> Bool {
+        return true
+    }
+    
+    @objc public override func supportedEvents() -> [String] {
+        let allEventNames: [String] = ["newScannedDevice", "newNotification", "newNotificationError"]
         return allEventNames
     }
     
