@@ -298,7 +298,7 @@ class MDS {
     return true;
   }
 
-  gaurd(
+  private gaurd(
     serial: string,
     uri: string,
     contract: any,
