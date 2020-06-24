@@ -54,3 +54,5 @@ fastlane/screenshots
 
 # CocoaPods
 /ios/Pods/
+
+/lib/*
