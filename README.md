@@ -2,7 +2,10 @@
 
 ## Getting started
 
-`$ yarn add react-native-movesense`
+`yarn add react-native-movesense`
+
+then
+
 `cd ios && pod install`
 
 ### Additional steps
