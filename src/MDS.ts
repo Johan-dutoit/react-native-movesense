@@ -40,17 +40,6 @@ class MDS {
   private onDeviceConnected: DeviceConnectedHandler | null = null;
   private onDeviceDisonnected: DeviceConnectedHandler | null = null;
 
-  getIdxFromKey(key: number) {
-    var idx = -1;
-    for (var i = 0; i < this.subscriptionKeys.length; i++) {
-      if (this.subscriptionKeys[i] === key) {
-        idx = i;
-        break;
-      }
-    }
-    return idx;
-  }
-
   subscribeToConnectedDevices() {
     this.subscribedToConnectedDevices = true;
     this.connectedDevicesSubscription = this.subscribe(
@@ -314,22 +303,38 @@ class MDS {
     }
   }
 
+  getIdxFromKey(key: number) {
+    var idx = -1;
+    for (var i = 0; i < this.subscriptionKeys.length; i++) {
+      if (this.subscriptionKeys[i] === key) {
+        idx = i;
+        break;
+      }
+    }
+    return idx;
+  }
+
   private executeCallback(
     callbacks: SuccessCallback[] | ErrorCallback[],
     key: number,
     notification: string | undefined
   ) {
-    if (callbacks == null || callbacks.length == 0) {
-      return;
+    if (callbacks == null || callbacks.length === 0) {
+      return false;
     }
 
     const id = this.getIdxFromKey(key);
     if (id === -1) {
-      return;
+      return false;
     }
 
     const callback = callbacks[id];
-    callback && callback(notification);
+    if (callback != null) {
+      callback(notification);
+      return true;
+    }
+
+    return false;
   }
 }
 
