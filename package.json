@@ -1,6 +1,6 @@
 {
   "name": "react-native-movesense",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "React Native Movesense library",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
