@@ -40,7 +40,7 @@ class MDS {
   private onDeviceConnected: DeviceConnectedHandler | null = null;
   private onDeviceDisonnected: DeviceConnectedHandler | null = null;
 
-  subscribeToConnectedDevices() {
+  subscribeToConnectedDevices = () => {
     this.subscribedToConnectedDevices = true;
     this.connectedDevicesSubscription = this.subscribe(
       '',
@@ -74,9 +74,9 @@ class MDS {
         this.subscribedToConnectedDevices = false;
       }
     );
-  }
+  };
 
-  scan(scanHandler: ScanHandler) {
+  scan = (scanHandler: ScanHandler) => {
     ReactMds.eventEmitter.addListener(
       NEW_SCANNED_DEVICE,
       ({ name, address }: MDSEvent) => {
@@ -92,51 +92,51 @@ class MDS {
       this.handleNewNotificationError
     );
     ReactMds.scan();
-  }
+  };
 
-  handleNewNotification({ key, notification }: MDSEvent) {
+  handleNewNotification = ({ key, notification }: MDSEvent) => {
     this.executeCallback(this.subscriptionSuccessCallbacks, key, notification);
-  }
+  };
 
-  handleNewNotificationError({ key, notification }: MDSEvent) {
+  handleNewNotificationError = ({ key, notification }: MDSEvent) => {
     this.executeCallback(this.subscriptionErrorCallbacks, key, notification);
-  }
+  };
 
-  stopScan() {
+  stopScan = () => {
     ReactMds.eventEmitter.removeAllListeners(NEW_SCANNED_DEVICE);
     ReactMds.eventEmitter.removeAllListeners(NEW_NOTIFICATION);
     ReactMds.eventEmitter.removeAllListeners(NEW_NOTIFICATION_ERROR);
 
     ReactMds.stopScan();
-  }
+  };
 
-  setHandlers(
+  setHandlers = (
     deviceConnected: DeviceConnectedHandler,
     deviceDisconnected: DeviceConnectedHandler
-  ) {
+  ) => {
     this.onDeviceConnected = deviceConnected;
     this.onDeviceDisonnected = deviceDisconnected;
     if (!this.subscribedToConnectedDevices) {
       this.subscribedToConnectedDevices = true;
       this.subscribeToConnectedDevices();
     }
-  }
+  };
 
-  connect(address: string) {
+  connect = (address: string) => {
     ReactMds.connect(address);
-  }
+  };
 
-  disconnect(address: string) {
+  disconnect = (address: string) => {
     ReactMds.disconnect(address);
-  }
+  };
 
-  get(
+  get = (
     serial: string,
     uri: string,
     contract: any,
     successCallback: SuccessCallback,
     errorCallback: ErrorCallback
-  ) {
+  ) => {
     this.gaurd(serial, uri, contract, successCallback, errorCallback);
 
     if (Platform.OS === 'android') {
@@ -155,15 +155,15 @@ class MDS {
       );
     }
     return true;
-  }
+  };
 
-  put(
+  put = (
     serial: string,
     uri: string,
     contract: any,
     successCallback: SuccessCallback,
     errorCallback: ErrorCallback
-  ) {
+  ) => {
     this.gaurd(serial, uri, contract, successCallback, errorCallback);
 
     //! TODO: keep an eye
@@ -184,15 +184,15 @@ class MDS {
         errorCallback
       );
     }
-  }
+  };
 
-  post(
+  post = (
     serial: string,
     uri: string,
     contract: any,
     successCallback: SuccessCallback,
     errorCallback: ErrorCallback
-  ) {
+  ) => {
     this.gaurd(serial, uri, contract, successCallback, errorCallback);
 
     if (Platform.OS === 'android') {
@@ -210,15 +210,15 @@ class MDS {
         errorCallback
       );
     }
-  }
+  };
 
-  delete(
+  delete = (
     serial: string,
     uri: string,
     contract: any,
     successCallback: SuccessCallback,
     errorCallback: ErrorCallback
-  ) {
+  ) => {
     this.gaurd(serial, uri, contract, successCallback, errorCallback);
 
     if (Platform.OS === 'android') {
@@ -236,15 +236,15 @@ class MDS {
         errorCallback
       );
     }
-  }
+  };
 
-  subscribe(
+  subscribe = (
     serial: string,
     uri: string,
     contract: any,
     successCallback: SuccessCallback,
     errorCallback: ErrorCallback
-  ) {
+  ) => {
     this.gaurd(serial, uri, contract, successCallback, errorCallback);
 
     this.subscriptionKey++;
@@ -270,9 +270,9 @@ class MDS {
     }
 
     return this.subscriptionKey;
-  }
+  };
 
-  unsubscribe(key: number) {
+  unsubscribe = (key: number) => {
     var idx = this.subscriptionKeys.indexOf(key);
     if (idx === -1) {
       return false;
@@ -283,15 +283,15 @@ class MDS {
     this.subscriptionSuccessCallbacks.splice(idx, 0);
     this.subscriptionErrorCallbacks.splice(idx, 0);
     return true;
-  }
+  };
 
-  private gaurd(
+  private gaurd = (
     serial: string,
     uri: string,
     contract: any,
     successCallback: SuccessCallback,
     errorCallback: ErrorCallback
-  ) {
+  ) => {
     if (
       serial == null ||
       uri == null ||
@@ -301,9 +301,9 @@ class MDS {
     ) {
       throw new Error('Arguments missing');
     }
-  }
+  };
 
-  getIdxFromKey(key: number) {
+  getIdxFromKey = (key: number) => {
     var idx = -1;
     for (var i = 0; i < this.subscriptionKeys.length; i++) {
       if (this.subscriptionKeys[i] === key) {
@@ -312,13 +312,13 @@ class MDS {
       }
     }
     return idx;
-  }
+  };
 
-  private executeCallback(
+  private executeCallback = (
     callbacks: SuccessCallback[] | ErrorCallback[],
     key: number,
     notification: string | undefined
-  ) {
+  ) => {
     if (callbacks == null || callbacks.length === 0) {
       return false;
     }
@@ -335,7 +335,7 @@ class MDS {
     }
 
     return false;
-  }
+  };
 }
 
 export default new MDS();

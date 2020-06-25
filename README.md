@@ -69,14 +69,22 @@ However, the correct answer may depend on XCode version.
 import movesense from 'react-native-movesense';
 
 // Scan for bluetooth devices
-movesense.scan((name, address) => {this.scanHandler(name, address);})
+movesense.scan((name, address) => {
+  this.scanHandler(name, address);
+});
 
 // Stop scanning
 movesense.stopScan();
 
 // Set dis/connection handlers
-movesense.setHandlers((serial) => { this.deviceConnected(serial) },
-(serial) => { this.deviceDisconnected(serial) });
+movesense.setHandlers(
+  (serial) => {
+    this.deviceConnected(serial);
+  },
+  (serial) => {
+    this.deviceDisconnected(serial);
+  }
+);
 
 // Connect to a device using address
 movesense.connect(address);
@@ -85,29 +93,69 @@ movesense.connect(address);
 movesense.disconnect(address);
 
 // Get a resource
-movesense.get(serial, resource, contract,
-   (response) => { this.onResponse(response) },
-   (error) => { this.onError(error) });
+movesense.get(
+  serial,
+  resource,
+  contract,
+  (response) => {
+    this.onResponse(response);
+  },
+  (error) => {
+    this.onError(error);
+  }
+);
 
 // Put a resource
-movesense.put(serial, resource, contract,
-  (response) => { this.onResponse(response) },
-  (error) => { this.onError(error) });
+movesense.put(
+  serial,
+  resource,
+  contract,
+  (response) => {
+    this.onResponse(response);
+  },
+  (error) => {
+    this.onError(error);
+  }
+);
 
 // Post a resource
-movesense.post(serial, resource, contract,
-   (response) => { this.onResponse(response) },
-   (error) => { this.onError(error) });
+movesense.post(
+  serial,
+  resource,
+  contract,
+  (response) => {
+    this.onResponse(response);
+  },
+  (error) => {
+    this.onError(error);
+  }
+);
 
 // Del a resource
-movesense.del(serial, resource, contract,
-  (response) => { this.onResponse(response) },
-  (error) => { this.onError(error) });
+movesense.del(
+  serial,
+  resource,
+  contract,
+  (response) => {
+    this.onResponse(response);
+  },
+  (error) => {
+    this.onError(error);
+  }
+);
 
 // Subscribe to a resource
-var key = movesense.subscribe(serial, resource, contract,
-  (notification) => { this.onResponse(notification) },
-  (error) => { this.onError(error) }));
+var key = movesense.subscribe(
+  serial,
+  resource,
+  contract,
+  (notification) => {
+    this.onResponse(notification);
+  },
+  (error) => {
+    this.onError(error);
+  }
+);
 
 // Unsubscribe from a subsciption
 movesense.unsubscribe(key);
