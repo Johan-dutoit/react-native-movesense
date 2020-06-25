@@ -105,14 +105,12 @@ class MDS {
     ReactMds.scan();
   }
 
-  handleNewNotification(e: MDSEvent) {
-    this.subscriptionSuccessCallbacks[this.getIdxFromKey(e.key)](
-      e.notification
-    );
+  handleNewNotification({ key, notification }: MDSEvent) {
+    this.executeCallback(this.subscriptionSuccessCallbacks, key, notification);
   }
 
-  handleNewNotificationError(e: MDSEvent) {
-    this.subscriptionErrorCallbacks[this.getIdxFromKey(e.key)](e.notification);
+  handleNewNotificationError({ key, notification }: MDSEvent) {
+    this.executeCallback(this.subscriptionErrorCallbacks, key, notification);
   }
 
   stopScan() {
@@ -314,6 +312,24 @@ class MDS {
     ) {
       throw new Error('Arguments missing');
     }
+  }
+
+  private executeCallback(
+    callbacks: SuccessCallback[] | ErrorCallback[],
+    key: number,
+    notification: string | undefined
+  ) {
+    if (callbacks == null || callbacks.length == 0) {
+      return;
+    }
+
+    const id = this.getIdxFromKey(key);
+    if (id === -1) {
+      return;
+    }
+
+    const callback = callbacks[id];
+    callback && callback(notification);
   }
 }
 
