@@ -19,7 +19,7 @@ export type Notification = {
 };
 
 export type MDSEvent = {
-  key: number;
+  key: string;
   name: string;
   address: string;
   notification: string;
@@ -95,11 +95,19 @@ class MDS {
   };
 
   handleNewNotification = ({ key, notification }: MDSEvent) => {
-    this.executeCallback(this.subscriptionSuccessCallbacks, key, notification);
+    this.executeCallback(
+      this.subscriptionSuccessCallbacks,
+      Number(key),
+      notification
+    );
   };
 
   handleNewNotificationError = ({ key, notification }: MDSEvent) => {
-    this.executeCallback(this.subscriptionErrorCallbacks, key, notification);
+    this.executeCallback(
+      this.subscriptionErrorCallbacks,
+      Number(key),
+      notification
+    );
   };
 
   stopScan = () => {
@@ -303,7 +311,7 @@ class MDS {
     }
   };
 
-  getIdxFromKey = (key: number) => {
+  getIndexFromKey = (key: number) => {
     var idx = -1;
     for (var i = 0; i < this.subscriptionKeys.length; i++) {
       if (this.subscriptionKeys[i] === key) {
@@ -323,7 +331,7 @@ class MDS {
       return false;
     }
 
-    const id = this.getIdxFromKey(key);
+    const id = this.getIndexFromKey(key);
     if (id === -1) {
       return false;
     }

@@ -77,14 +77,14 @@ describe('movesense tests', () => {
     const subKey = movesense.subscribe('test', 'test', {}, successCb, errorCb);
 
     movesense.handleNewNotification({
-      key: subKey,
+      key: subKey.toString(),
       notification: 'test',
       address: '/test/',
       name: 'test',
     });
 
     movesense.handleNewNotificationError({
-      key: subKey,
+      key: subKey.toString(),
       notification: 'test',
       address: '/test/',
       name: 'test',
@@ -127,5 +127,14 @@ describe('movesense tests', () => {
 
     // @ts-ignore
     expect(movesense.executeCallback([jest.fn()], 0, 'test')).toBeFalsy();
+  });
+
+  it('tests idx function', () => {
+    // @ts-ignore
+    movesense.subscriptionKeys = [1, 2, 3];
+
+    expect(movesense.getIndexFromKey(1)).toBe(0);
+    expect(movesense.getIndexFromKey(2)).toBe(1);
+    expect(movesense.getIndexFromKey(3)).toBe(2);
   });
 });
