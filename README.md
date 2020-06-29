@@ -77,7 +77,7 @@ movesense.scan((name, address) => {
 movesense.stopScan();
 
 // Set dis/connection handlers
-movesense.setHandlers(
+movesense.setConnectionHandlers(
   (serial) => {
     this.deviceConnected(serial);
   },
@@ -144,6 +144,9 @@ movesense.del(
   }
 );
 
+// Subscribes to movesense notifications
+movesense.setNotificationHandlers();
+
 // Subscribe to a resource
 var key = movesense.subscribe(
   serial,
@@ -159,4 +162,7 @@ var key = movesense.subscribe(
 
 // Unsubscribe from a subsciption
 movesense.unsubscribe(key);
+
+// Remove native event handlers (generally called once you're done with everything - i.e. no longer subscribed to events)
+movesense.removeNotificationHandlers();
 ```

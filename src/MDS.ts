@@ -18,11 +18,18 @@ export type Notification = {
   };
 };
 
-export type MDSEvent = {
-  key: string;
+export type NewScannedDeviceCallbackProps = {
   name: string;
   address: string;
+};
+
+export type MDSEvent = {
+  key: string;
   notification: string;
+};
+
+export type MDSError = {
+  key: string;
   error: string;
 };
 
@@ -80,18 +87,11 @@ class MDS {
   scan = (scanHandler: ScanHandler) => {
     ReactMds.eventEmitter.addListener(
       NEW_SCANNED_DEVICE,
-      ({ name, address }: MDSEvent) => {
+      ({ name, address }: NewScannedDeviceCallbackProps) => {
         scanHandler(name, address);
       }
     );
-    ReactMds.eventEmitter.addListener(
-      NEW_NOTIFICATION,
-      this.handleNewNotification
-    );
-    ReactMds.eventEmitter.addListener(
-      NEW_NOTIFICATION_ERROR,
-      this.handleNewNotificationError
-    );
+
     ReactMds.scan();
   };
 
@@ -103,19 +103,17 @@ class MDS {
     );
   };
 
-  handleNewNotificationError = ({ key, error }: MDSEvent) => {
+  handleNewNotificationError = ({ key, error }: MDSError) => {
     this.executeCallback(this.subscriptionErrorCallbacks, Number(key), error);
   };
 
   stopScan = () => {
     ReactMds.eventEmitter.removeAllListeners(NEW_SCANNED_DEVICE);
-    ReactMds.eventEmitter.removeAllListeners(NEW_NOTIFICATION);
-    ReactMds.eventEmitter.removeAllListeners(NEW_NOTIFICATION_ERROR);
 
     ReactMds.stopScan();
   };
 
-  setHandlers = (
+  setConnectionHandlers = (
     deviceConnected: DeviceConnectedHandler,
     deviceDisconnected: DeviceConnectedHandler
   ) => {
@@ -252,6 +250,10 @@ class MDS {
   ) => {
     this.gaurd(serial, uri, contract, successCallback, errorCallback);
 
+    if (this.subscriptionKeys.length === 0) {
+      this.setNotificationHandlers();
+    }
+
     this.subscriptionKey++;
     this.subscriptionKeys.push(this.subscriptionKey);
     this.subscriptionSuccessCallbacks.push(successCallback);
@@ -284,9 +286,14 @@ class MDS {
     }
 
     ReactMds.unsubscribe(key.toString());
-    this.subscriptionKeys.splice(index, 0);
-    this.subscriptionSuccessCallbacks.splice(index, 0);
-    this.subscriptionErrorCallbacks.splice(index, 0);
+    this.subscriptionKeys.splice(index, 1);
+    this.subscriptionSuccessCallbacks.splice(index, 1);
+    this.subscriptionErrorCallbacks.splice(index, 1);
+
+    if (this.subscriptionKeys.length === 0) {
+      this.removeNotificationHandlers();
+    }
+
     return true;
   };
 
@@ -329,6 +336,22 @@ class MDS {
     }
 
     return false;
+  };
+
+  private setNotificationHandlers = () => {
+    ReactMds.eventEmitter.addListener(
+      NEW_NOTIFICATION,
+      this.handleNewNotification
+    );
+    ReactMds.eventEmitter.addListener(
+      NEW_NOTIFICATION_ERROR,
+      this.handleNewNotificationError
+    );
+  };
+
+  private removeNotificationHandlers = () => {
+    ReactMds.eventEmitter.removeAllListeners(NEW_NOTIFICATION);
+    ReactMds.eventEmitter.removeAllListeners(NEW_NOTIFICATION_ERROR);
   };
 }
 

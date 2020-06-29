@@ -36,7 +36,7 @@ describe('movesense tests', () => {
     const scanHandler = jest.fn();
     movesense.scan(scanHandler);
 
-    expect(ReactMds.eventEmitter.addListener).toBeCalledTimes(3);
+    expect(ReactMds.eventEmitter.addListener).toBeCalledTimes(1);
     expect(ReactMds.scan).toBeCalledTimes(1);
   });
 
@@ -44,12 +44,12 @@ describe('movesense tests', () => {
     const scanHandler = jest.fn();
     movesense.scan(scanHandler);
 
-    expect(ReactMds.eventEmitter.addListener).toBeCalledTimes(3);
+    expect(ReactMds.eventEmitter.addListener).toBeCalledTimes(1);
     expect(ReactMds.scan).toBeCalledTimes(1);
 
     movesense.stopScan();
 
-    expect(ReactMds.eventEmitter.removeAllListeners).toBeCalledTimes(3);
+    expect(ReactMds.eventEmitter.removeAllListeners).toBeCalledTimes(1);
     expect(ReactMds.stopScan).toBeCalledTimes(1);
   });
 
@@ -64,10 +64,12 @@ describe('movesense tests', () => {
     expect(successCb).toHaveBeenCalledTimes(0);
     expect(errorCb).toHaveBeenCalledTimes(0);
     expect(ReactMds.subscribe).toBeCalledTimes(1);
+    expect(ReactMds.eventEmitter.addListener).toBeCalledTimes(2);
 
     expect(movesense.unsubscribe(123)).toBeFalsy();
     expect(movesense.unsubscribe(subKey)).toBeTruthy();
     expect(ReactMds.unsubscribe).toBeCalledTimes(1);
+    expect(ReactMds.eventEmitter.removeAllListeners).toBeCalledTimes(2);
   });
 
   it('handles callbacks', () => {
@@ -79,34 +81,30 @@ describe('movesense tests', () => {
     movesense.handleNewNotification({
       key: subKey.toString(),
       notification: 'test',
-      address: '/test/',
-      name: 'test',
     });
 
     movesense.handleNewNotificationError({
       key: subKey.toString(),
-      notification: 'test',
-      address: '/test/',
-      name: 'test',
+      error: 'test',
     });
 
     expect(successCb).toHaveBeenCalledTimes(1);
     expect(errorCb).toHaveBeenCalledTimes(1);
   });
 
-  it('handles setHandlers', () => {
+  it('handles setConnectionHandlers', () => {
     const deviceConnected = jest.fn();
     const deviceDisconnected = jest.fn();
 
     // @ts-ignore
     movesense.subscribedToConnectedDevices = true;
-    movesense.setHandlers(deviceConnected, deviceDisconnected);
+    movesense.setConnectionHandlers(deviceConnected, deviceDisconnected);
 
     expect(ReactMds.subscribe).toBeCalledTimes(0);
 
     // @ts-ignore
     movesense.subscribedToConnectedDevices = false;
-    movesense.setHandlers(deviceConnected, deviceDisconnected);
+    movesense.setConnectionHandlers(deviceConnected, deviceDisconnected);
 
     expect(ReactMds.subscribe).toBeCalledTimes(1);
   });
