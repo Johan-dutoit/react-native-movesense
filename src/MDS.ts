@@ -3,7 +3,7 @@ import { Platform } from 'react-native';
 import ReactMds from './internal/nativeInterfaces';
 import { ErrorCallback, SuccessCallback } from './internal/privateTypes';
 
-const URI_PREFIX = 'suunto://';
+const URI_PROTOCOL = 'suunto://';
 const NEW_SCANNED_DEVICE = 'newScannedDevice';
 const NEW_NOTIFICATION = 'newNotification';
 const NEW_NOTIFICATION_ERROR = 'newNotificationError';
@@ -149,14 +149,14 @@ class MDS {
 
     if (Platform.OS === 'android') {
       ReactMds.get(
-        URI_PREFIX + serial + uri,
+        `${URI_PROTOCOL}${serial}${uri}`,
         JSON.stringify(contract),
         successCallback,
         errorCallback
       );
     } else {
       ReactMds.get(
-        URI_PREFIX + serial + uri,
+        `${URI_PROTOCOL}${serial}${uri}`,
         contract,
         (_, r) => successCallback(r),
         (_, r) => errorCallback(r)
@@ -179,14 +179,14 @@ class MDS {
 
     if (Platform.OS === 'android') {
       ReactMds.put(
-        URI_PREFIX + serial + uri,
+        `${URI_PROTOCOL}${serial}${uri}`,
         JSON.stringify(contract),
         (_, r) => successCallback(r),
         (_, r) => errorCallback(r)
       );
     } else {
       ReactMds.put(
-        URI_PREFIX + serial + uri,
+        `${URI_PROTOCOL}${serial}${uri}`,
         contract,
         successCallback,
         errorCallback
@@ -205,14 +205,14 @@ class MDS {
 
     if (Platform.OS === 'android') {
       ReactMds.post(
-        URI_PREFIX + serial + uri,
+        `${URI_PROTOCOL}${serial}${uri}`,
         JSON.stringify(contract),
         successCallback,
         errorCallback
       );
     } else {
       ReactMds.post(
-        URI_PREFIX + serial + uri,
+        `${URI_PROTOCOL}${serial}${uri}`,
         contract,
         successCallback,
         errorCallback
@@ -231,14 +231,14 @@ class MDS {
 
     if (Platform.OS === 'android') {
       ReactMds.delete(
-        URI_PREFIX + serial + uri,
+        `${URI_PROTOCOL}${serial}${uri}`,
         JSON.stringify(contract),
         successCallback,
         errorCallback
       );
     } else {
       ReactMds.delete(
-        URI_PREFIX + serial + uri,
+        `${URI_PROTOCOL}${serial}${uri}`,
         contract,
         successCallback,
         errorCallback
@@ -271,7 +271,7 @@ class MDS {
       );
     } else {
       ReactMds.subscribe(
-        URI_PREFIX + serial + uri,
+        `${URI_PROTOCOL}${serial}${uri}`,
         contract,
         subscriptionKeyStr
       );
@@ -281,15 +281,15 @@ class MDS {
   };
 
   unsubscribe = (key: number) => {
-    var idx = this.subscriptionKeys.indexOf(key);
-    if (idx === -1) {
+    var index = this.subscriptionKeys.indexOf(key);
+    if (index === -1) {
       return false;
     }
 
     ReactMds.unsubscribe(key.toString());
-    this.subscriptionKeys.splice(idx, 0);
-    this.subscriptionSuccessCallbacks.splice(idx, 0);
-    this.subscriptionErrorCallbacks.splice(idx, 0);
+    this.subscriptionKeys.splice(index, 0);
+    this.subscriptionSuccessCallbacks.splice(index, 0);
+    this.subscriptionErrorCallbacks.splice(index, 0);
     return true;
   };
 
@@ -311,17 +311,6 @@ class MDS {
     }
   };
 
-  getIndexFromKey = (key: number) => {
-    var idx = -1;
-    for (var i = 0; i < this.subscriptionKeys.length; i++) {
-      if (this.subscriptionKeys[i] === key) {
-        idx = i;
-        break;
-      }
-    }
-    return idx;
-  };
-
   private executeCallback = (
     callbacks: SuccessCallback[] | ErrorCallback[],
     key: number,
@@ -331,7 +320,7 @@ class MDS {
       return false;
     }
 
-    const id = this.getIndexFromKey(key);
+    const id = this.subscriptionKeys.indexOf(key);
     if (id === -1) {
       return false;
     }

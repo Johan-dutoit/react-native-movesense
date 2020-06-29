@@ -128,13 +128,4 @@ describe('movesense tests', () => {
     // @ts-ignore
     expect(movesense.executeCallback([jest.fn()], 0, 'test')).toBeFalsy();
   });
-
-  it('tests idx function', () => {
-    // @ts-ignore
-    movesense.subscriptionKeys = [1, 2, 3];
-
-    expect(movesense.getIndexFromKey(1)).toBe(0);
-    expect(movesense.getIndexFromKey(2)).toBe(1);
-    expect(movesense.getIndexFromKey(3)).toBe(2);
-  });
 });
