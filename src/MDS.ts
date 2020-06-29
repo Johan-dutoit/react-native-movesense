@@ -23,6 +23,7 @@ export type MDSEvent = {
   name: string;
   address: string;
   notification: string;
+  error: string;
 };
 
 export type ScanHandler = (name: string, address: string) => void;
@@ -102,12 +103,8 @@ class MDS {
     );
   };
 
-  handleNewNotificationError = ({ key, notification }: MDSEvent) => {
-    this.executeCallback(
-      this.subscriptionErrorCallbacks,
-      Number(key),
-      notification
-    );
+  handleNewNotificationError = ({ key, error }: MDSEvent) => {
+    this.executeCallback(this.subscriptionErrorCallbacks, Number(key), error);
   };
 
   stopScan = () => {
