@@ -1,7 +1,14 @@
 import { Platform } from 'react-native';
 
 import ReactMds from './internal/nativeInterfaces';
-import { ErrorCallback, SuccessCallback } from './types';
+import {
+  Callback,
+  DeviceConnectedHandler,
+  MDSError,
+  MDSEvent,
+  NewScannedDeviceCallbackProps,
+  ScanHandler,
+} from './types';
 
 const URI_PROTOCOL = 'suunto://';
 const NEW_SCANNED_DEVICE = 'newScannedDevice';
@@ -18,29 +25,11 @@ export type Notification = {
   };
 };
 
-export type NewScannedDeviceCallbackProps = {
-  name: string;
-  address: string;
-};
-
-export type MDSEvent = {
-  key: string;
-  notification: string;
-};
-
-export type MDSError = {
-  key: string;
-  error: string;
-};
-
-export type ScanHandler = (name: string, address: string) => void;
-export type DeviceConnectedHandler = (serial: string) => void;
-
 class MDS {
   private subscriptionKey: number = 0;
   private subscriptionKeys: number[] = [];
-  private subscriptionSuccessCallbacks: SuccessCallback[] = [];
-  private subscriptionErrorCallbacks: ErrorCallback[] = [];
+  private subscriptionSuccessCallbacks: Callback[] = [];
+  private subscriptionErrorCallbacks: Callback[] = [];
 
   private subscribedToConnectedDevices = false;
   private connectedDevicesSubscription = -1;
@@ -101,15 +90,11 @@ class MDS {
   };
 
   handleNewNotification = ({ key, notification }: MDSEvent) => {
-    this.executeCallback(
-      this.subscriptionSuccessCallbacks,
-      Number(key),
-      notification
-    );
+    this.executeCallback(this.subscriptionSuccessCallbacks, key, notification);
   };
 
   handleNewNotificationError = ({ key, error }: MDSError) => {
-    this.executeCallback(this.subscriptionErrorCallbacks, Number(key), error);
+    this.executeCallback(this.subscriptionErrorCallbacks, key, error);
   };
 
   stopScan = () => {
@@ -138,120 +123,120 @@ class MDS {
     ReactMds.disconnect(address);
   };
 
-  get = (
-    serial: string,
-    uri: string,
-    contract: any,
-    successCallback: SuccessCallback,
-    errorCallback: ErrorCallback
-  ) => {
-    this.gaurd(serial, uri, contract, successCallback, errorCallback);
+  // get = (
+  //   serial: string,
+  //   uri: string,
+  //   contract: any,
+  //   successCallback: Callback,
+  //   errorCallback: Callback
+  // ) => {
+  //   this.gaurd(serial, uri, contract, successCallback, errorCallback);
 
-    if (Platform.OS === 'android') {
-      ReactMds.get(
-        `${URI_PROTOCOL}${serial}${uri}`,
-        JSON.stringify(contract),
-        successCallback,
-        errorCallback
-      );
-    } else {
-      ReactMds.get(
-        `${URI_PROTOCOL}${serial}${uri}`,
-        contract,
-        (_, r) => successCallback(r),
-        (_, r) => errorCallback(r)
-      );
-    }
-    return true;
-  };
+  //   if (Platform.OS === 'android') {
+  //     ReactMds.get(
+  //       `${URI_PROTOCOL}${serial}${uri}`,
+  //       JSON.stringify(contract),
+  //       successCallback,
+  //       errorCallback
+  //     );
+  //   } else {
+  //     ReactMds.get(
+  //       `${URI_PROTOCOL}${serial}${uri}`,
+  //       contract,
+  //       (_, r) => successCallback(r),
+  //       (_, r) => errorCallback(r)
+  //     );
+  //   }
+  //   return true;
+  // };
 
-  put = (
-    serial: string,
-    uri: string,
-    contract: any,
-    successCallback: SuccessCallback,
-    errorCallback: ErrorCallback
-  ) => {
-    this.gaurd(serial, uri, contract, successCallback, errorCallback);
+  // put = (
+  //   serial: string,
+  //   uri: string,
+  //   contract: any,
+  //   successCallback: Callback,
+  //   errorCallback: Callback
+  // ) => {
+  //   this.gaurd(serial, uri, contract, successCallback, errorCallback);
 
-    //! TODO: keep an eye
-    // This seems the opposite to get
+  //   //! TODO: keep an eye
+  //   // This seems the opposite to get
 
-    if (Platform.OS === 'android') {
-      ReactMds.put(
-        `${URI_PROTOCOL}${serial}${uri}`,
-        JSON.stringify(contract),
-        (_, r) => successCallback(r),
-        (_, r) => errorCallback(r)
-      );
-    } else {
-      ReactMds.put(
-        `${URI_PROTOCOL}${serial}${uri}`,
-        contract,
-        successCallback,
-        errorCallback
-      );
-    }
-  };
+  //   if (Platform.OS === 'android') {
+  //     ReactMds.put(
+  //       `${URI_PROTOCOL}${serial}${uri}`,
+  //       JSON.stringify(contract),
+  //       (_, r) => successCallback(r),
+  //       (_, r) => errorCallback(r)
+  //     );
+  //   } else {
+  //     ReactMds.put(
+  //       `${URI_PROTOCOL}${serial}${uri}`,
+  //       contract,
+  //       successCallback,
+  //       errorCallback
+  //     );
+  //   }
+  // };
 
-  post = (
-    serial: string,
-    uri: string,
-    contract: any,
-    successCallback: SuccessCallback,
-    errorCallback: ErrorCallback
-  ) => {
-    this.gaurd(serial, uri, contract, successCallback, errorCallback);
+  // post = (
+  //   serial: string,
+  //   uri: string,
+  //   contract: any,
+  //   successCallback: Callback,
+  //   errorCallback: Callback
+  // ) => {
+  //   this.gaurd(serial, uri, contract, successCallback, errorCallback);
 
-    if (Platform.OS === 'android') {
-      ReactMds.post(
-        `${URI_PROTOCOL}${serial}${uri}`,
-        JSON.stringify(contract),
-        successCallback,
-        errorCallback
-      );
-    } else {
-      ReactMds.post(
-        `${URI_PROTOCOL}${serial}${uri}`,
-        contract,
-        successCallback,
-        errorCallback
-      );
-    }
-  };
+  //   if (Platform.OS === 'android') {
+  //     ReactMds.post(
+  //       `${URI_PROTOCOL}${serial}${uri}`,
+  //       JSON.stringify(contract),
+  //       successCallback,
+  //       errorCallback
+  //     );
+  //   } else {
+  //     ReactMds.post(
+  //       `${URI_PROTOCOL}${serial}${uri}`,
+  //       contract,
+  //       successCallback,
+  //       errorCallback
+  //     );
+  //   }
+  // };
 
-  delete = (
-    serial: string,
-    uri: string,
-    contract: any,
-    successCallback: SuccessCallback,
-    errorCallback: ErrorCallback
-  ) => {
-    this.gaurd(serial, uri, contract, successCallback, errorCallback);
+  // delete = (
+  //   serial: string,
+  //   uri: string,
+  //   contract: any,
+  //   successCallback: Callback,
+  //   errorCallback: Callback
+  // ) => {
+  //   this.gaurd(serial, uri, contract, successCallback, errorCallback);
 
-    if (Platform.OS === 'android') {
-      ReactMds.delete(
-        `${URI_PROTOCOL}${serial}${uri}`,
-        JSON.stringify(contract),
-        successCallback,
-        errorCallback
-      );
-    } else {
-      ReactMds.delete(
-        `${URI_PROTOCOL}${serial}${uri}`,
-        contract,
-        successCallback,
-        errorCallback
-      );
-    }
-  };
+  //   if (Platform.OS === 'android') {
+  //     ReactMds.delete(
+  //       `${URI_PROTOCOL}${serial}${uri}`,
+  //       JSON.stringify(contract),
+  //       successCallback,
+  //       errorCallback
+  //     );
+  //   } else {
+  //     ReactMds.delete(
+  //       `${URI_PROTOCOL}${serial}${uri}`,
+  //       contract,
+  //       successCallback,
+  //       errorCallback
+  //     );
+  //   }
+  // };
 
   subscribe = (
     serial: string,
     uri: string,
     contract: any,
-    successCallback: SuccessCallback,
-    errorCallback: ErrorCallback
+    successCallback: Callback,
+    errorCallback: Callback
   ) => {
     this.gaurd(serial, uri, contract, successCallback, errorCallback);
 
@@ -306,8 +291,8 @@ class MDS {
     serial: string,
     uri: string,
     contract: any,
-    successCallback: SuccessCallback,
-    errorCallback: ErrorCallback
+    successCallback: Callback,
+    errorCallback: Callback
   ) => {
     if (
       serial == null ||
@@ -321,22 +306,22 @@ class MDS {
   };
 
   private executeCallback = (
-    callbacks: SuccessCallback[] | ErrorCallback[],
-    key: number,
-    notification: string | undefined
+    callbacks: Callback[],
+    key: string,
+    notification: string
   ) => {
     if (callbacks == null || callbacks.length === 0) {
       return false;
     }
 
-    const id = this.subscriptionKeys.indexOf(key);
+    const id = this.subscriptionKeys.indexOf(Number(key));
     if (id === -1) {
       return false;
     }
 
     const callback = callbacks[id];
     if (callback != null) {
-      callback(notification);
+      callback(key, notification);
       return true;
     }
 

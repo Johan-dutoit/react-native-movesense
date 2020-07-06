@@ -1,4 +1,4 @@
-import { SuccessCallback, ErrorCallback } from '../types';
+import { Callback } from '../types';
 
 export interface ReactMdsNativeModule {
   scan: () => void;
@@ -9,29 +9,29 @@ export interface ReactMdsNativeModule {
   get: (
     address: string,
     contract: string,
-    successCallback: SuccessCallback,
-    errorCallback: ErrorCallback
+    successCallback: Callback,
+    errorCallback: Callback
   ) => void;
 
   put: (
     address: string,
     contract: string,
-    successCallback: SuccessCallback,
-    errorCallback: ErrorCallback
+    successCallback: Callback,
+    errorCallback: Callback
   ) => void;
 
   post: (
     address: string,
     contract: string,
-    successCallback: SuccessCallback,
-    errorCallback: ErrorCallback
+    successCallback: Callback,
+    errorCallback: Callback
   ) => void;
 
   delete: (
     address: string,
     contract: string,
-    successCallback: SuccessCallback,
-    errorCallback: ErrorCallback
+    successCallback: Callback,
+    errorCallback: Callback
   ) => void;
 
   subscribe: (address: string, contract: string, subsKey: string) => void;

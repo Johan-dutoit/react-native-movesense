@@ -18,11 +18,22 @@ export type Sample = {
   Method: string;
 };
 
-export type SuccessCallback = (
-  errorOrResponse?: Sample | string,
-  response?: string
-) => any;
-export type ErrorCallback = (
-  errorOrResponse?: string,
-  response?: string
-) => any;
+export type Callback = (key: string, response: string) => any;
+
+export type NewScannedDeviceCallbackProps = {
+  name: string;
+  address: string;
+};
+
+export type MDSEvent = {
+  key: string;
+  notification: string;
+};
+
+export type MDSError = {
+  key: string;
+  error: string;
+};
+
+export type ScanHandler = (name: string, address: string) => void;
+export type DeviceConnectedHandler = (serial: string) => void;

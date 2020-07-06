@@ -30,6 +30,7 @@ build/
 local.properties
 *.iml
 .project
+android/.settings/*.prefs
 
 # node.js
 #
