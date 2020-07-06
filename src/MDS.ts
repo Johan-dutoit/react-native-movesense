@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
 
 import ReactMds from './internal/nativeInterfaces';
-import { ErrorCallback, SuccessCallback } from './internal/privateTypes';
+import { ErrorCallback, SuccessCallback } from './types';
 
 const URI_PROTOCOL = 'suunto://';
 const NEW_SCANNED_DEVICE = 'newScannedDevice';
