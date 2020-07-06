@@ -13,12 +13,14 @@ export type Sample = {
     ArrayAcc?: Axis[];
     ArrayGyro?: Axis[];
     ArrayMagn?: Axis[];
+    [key: string]: number | number[] | Axis[] | undefined;
   };
   Uri: string;
   Method: string;
 };
 
 export type Callback = (key: string, response: string) => any;
+export type MethodCallback = (response: string) => any;
 
 export type NewScannedDeviceCallbackProps = {
   name: string;

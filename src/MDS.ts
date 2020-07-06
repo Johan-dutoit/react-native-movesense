@@ -8,6 +8,7 @@ import {
   MDSEvent,
   NewScannedDeviceCallbackProps,
   ScanHandler,
+  MethodCallback,
 } from './types';
 
 const URI_PROTOCOL = 'suunto://';
@@ -118,113 +119,113 @@ class MDS {
     ReactMds.disconnect(address);
   };
 
-  // get = (
-  //   serial: string,
-  //   uri: string,
-  //   contract: any,
-  //   successCallback: Callback,
-  //   errorCallback: Callback
-  // ) => {
-  //   this.gaurd(serial, uri, contract, successCallback, errorCallback);
+  get = (
+    serial: string,
+    uri: string,
+    contract: any,
+    successCallback: MethodCallback,
+    errorCallback: MethodCallback
+  ) => {
+    this.gaurd(serial, uri, contract, successCallback, errorCallback);
 
-  //   if (Platform.OS === 'android') {
-  //     ReactMds.get(
-  //       `${URI_PROTOCOL}${serial}${uri}`,
-  //       JSON.stringify(contract),
-  //       successCallback,
-  //       errorCallback
-  //     );
-  //   } else {
-  //     ReactMds.get(
-  //       `${URI_PROTOCOL}${serial}${uri}`,
-  //       contract,
-  //       (_, r) => successCallback(r),
-  //       (_, r) => errorCallback(r)
-  //     );
-  //   }
-  //   return true;
-  // };
+    if (Platform.OS === 'android') {
+      ReactMds.get(
+        `${URI_PROTOCOL}${serial}${uri}`,
+        JSON.stringify(contract),
+        successCallback,
+        errorCallback
+      );
+    } else {
+      ReactMds.get(
+        `${URI_PROTOCOL}${serial}${uri}`,
+        contract,
+        (_, r) => successCallback(r),
+        (_, r) => errorCallback(r)
+      );
+    }
+    return true;
+  };
 
-  // put = (
-  //   serial: string,
-  //   uri: string,
-  //   contract: any,
-  //   successCallback: Callback,
-  //   errorCallback: Callback
-  // ) => {
-  //   this.gaurd(serial, uri, contract, successCallback, errorCallback);
+  put = (
+    serial: string,
+    uri: string,
+    contract: any,
+    successCallback: MethodCallback,
+    errorCallback: MethodCallback
+  ) => {
+    this.gaurd(serial, uri, contract, successCallback, errorCallback);
 
-  //   //! TODO: keep an eye
-  //   // This seems the opposite to get
+    //! TODO: keep an eye
+    // This seems the opposite to get
 
-  //   if (Platform.OS === 'android') {
-  //     ReactMds.put(
-  //       `${URI_PROTOCOL}${serial}${uri}`,
-  //       JSON.stringify(contract),
-  //       (_, r) => successCallback(r),
-  //       (_, r) => errorCallback(r)
-  //     );
-  //   } else {
-  //     ReactMds.put(
-  //       `${URI_PROTOCOL}${serial}${uri}`,
-  //       contract,
-  //       successCallback,
-  //       errorCallback
-  //     );
-  //   }
-  // };
+    if (Platform.OS === 'android') {
+      ReactMds.put(
+        `${URI_PROTOCOL}${serial}${uri}`,
+        JSON.stringify(contract),
+        (_, r) => successCallback(r),
+        (_, r) => errorCallback(r)
+      );
+    } else {
+      ReactMds.put(
+        `${URI_PROTOCOL}${serial}${uri}`,
+        contract,
+        successCallback,
+        errorCallback
+      );
+    }
+  };
 
-  // post = (
-  //   serial: string,
-  //   uri: string,
-  //   contract: any,
-  //   successCallback: Callback,
-  //   errorCallback: Callback
-  // ) => {
-  //   this.gaurd(serial, uri, contract, successCallback, errorCallback);
+  post = (
+    serial: string,
+    uri: string,
+    contract: any,
+    successCallback: MethodCallback,
+    errorCallback: MethodCallback
+  ) => {
+    this.gaurd(serial, uri, contract, successCallback, errorCallback);
 
-  //   if (Platform.OS === 'android') {
-  //     ReactMds.post(
-  //       `${URI_PROTOCOL}${serial}${uri}`,
-  //       JSON.stringify(contract),
-  //       successCallback,
-  //       errorCallback
-  //     );
-  //   } else {
-  //     ReactMds.post(
-  //       `${URI_PROTOCOL}${serial}${uri}`,
-  //       contract,
-  //       successCallback,
-  //       errorCallback
-  //     );
-  //   }
-  // };
+    if (Platform.OS === 'android') {
+      ReactMds.post(
+        `${URI_PROTOCOL}${serial}${uri}`,
+        JSON.stringify(contract),
+        successCallback,
+        errorCallback
+      );
+    } else {
+      ReactMds.post(
+        `${URI_PROTOCOL}${serial}${uri}`,
+        contract,
+        successCallback,
+        errorCallback
+      );
+    }
+  };
 
-  // delete = (
-  //   serial: string,
-  //   uri: string,
-  //   contract: any,
-  //   successCallback: Callback,
-  //   errorCallback: Callback
-  // ) => {
-  //   this.gaurd(serial, uri, contract, successCallback, errorCallback);
+  delete = (
+    serial: string,
+    uri: string,
+    contract: any,
+    successCallback: MethodCallback,
+    errorCallback: MethodCallback
+  ) => {
+    this.gaurd(serial, uri, contract, successCallback, errorCallback);
 
-  //   if (Platform.OS === 'android') {
-  //     ReactMds.delete(
-  //       `${URI_PROTOCOL}${serial}${uri}`,
-  //       JSON.stringify(contract),
-  //       successCallback,
-  //       errorCallback
-  //     );
-  //   } else {
-  //     ReactMds.delete(
-  //       `${URI_PROTOCOL}${serial}${uri}`,
-  //       contract,
-  //       successCallback,
-  //       errorCallback
-  //     );
-  //   }
-  // };
+    if (Platform.OS === 'android') {
+      ReactMds.delete(
+        `${URI_PROTOCOL}${serial}${uri}`,
+        JSON.stringify(contract),
+        successCallback,
+        errorCallback
+      );
+    } else {
+      ReactMds.delete(
+        `${URI_PROTOCOL}${serial}${uri}`,
+        contract,
+        successCallback,
+        errorCallback
+      );
+    }
+  };
 
   subscribe = (
     serial: string,
