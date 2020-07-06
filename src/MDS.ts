@@ -9,6 +9,7 @@ import {
   NewScannedDeviceCallbackProps,
   ScanHandler,
   MethodCallback,
+  TimeResponse,
 } from './types';
 
 const URI_PROTOCOL = 'suunto://';
@@ -143,7 +144,6 @@ class MDS {
         (_, r) => errorCallback(r)
       );
     }
-    return true;
   };
 
   put = (
@@ -283,22 +283,25 @@ class MDS {
     return true;
   };
 
-  private gaurd = (
-    serial: string,
-    uri: string,
-    contract: any,
-    successCallback: Callback,
-    errorCallback: Callback
-  ) => {
-    if (
-      serial == null ||
-      uri == null ||
-      contract == null ||
-      successCallback == null ||
-      errorCallback == null
-    ) {
-      throw new Error('Arguments missing');
-    }
+  getTime = (serial: string) => {
+    return new Promise<TimeResponse>((resolve, reject) => {
+      if (serial == null) {
+        reject('Serial is missing');
+      }
+
+      this.get(
+        serial,
+        '/time',
+        {},
+        (res) => {
+          var jsonRes = JSON.parse(res) as TimeResponse;
+          resolve(jsonRes);
+        },
+        (err) => {
+          reject(err);
+        }
+      );
+    });
   };
 
   private executeCallback = (
@@ -338,6 +341,24 @@ class MDS {
   private removeNotificationHandlers = () => {
     ReactMds.eventEmitter.removeAllListeners(NEW_NOTIFICATION);
     ReactMds.eventEmitter.removeAllListeners(NEW_NOTIFICATION_ERROR);
+  };
+
+  private gaurd = (
+    serial: string,
+    uri: string,
+    contract: any,
+    successCallback: Callback | MethodCallback,
+    errorCallback: Callback | MethodCallback
+  ) => {
+    if (
+      serial == null ||
+      uri == null ||
+      contract == null ||
+      successCallback == null ||
+      errorCallback == null
+    ) {
+      throw new Error('Arguments missing');
+    }
   };
 }
 
