@@ -54,13 +54,18 @@ class MDS {
       '',
       'MDS/ConnectedDevices',
       {},
-      (notification?: string) => {
+      (notification) => {
         if (notification == null) {
           // is this possible?
           return;
         }
 
-        var data = JSON.parse(notification) as Notification;
+        const notificationString =
+          typeof notification === 'string'
+            ? notification
+            : JSON.stringify(notification);
+
+        const data = JSON.parse(notificationString) as Notification;
 
         if (data.Method === 'POST') {
           if (data?.Body?.DeviceInfo?.Serial != null) {
