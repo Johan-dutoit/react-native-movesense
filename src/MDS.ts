@@ -9,7 +9,7 @@ import {
   NewScannedDeviceCallbackProps,
   ScanHandler,
   MethodCallback,
-  TimeResponse,
+  UriTypes,
 } from './types';
 
 const URI_PROTOCOL = 'suunto://';
@@ -120,116 +120,129 @@ class MDS {
     ReactMds.disconnect(address);
   };
 
-  get = (
+  get<TRequest, TResponse>(
     serial: string,
-    uri: string,
-    contract: any,
-    successCallback: MethodCallback,
-    errorCallback: MethodCallback
-  ) => {
-    this.gaurd(serial, uri, contract, successCallback, errorCallback);
+    uri: UriTypes,
+    contract?: TRequest
+  ): Promise<TResponse> {
+    return new Promise((resolve, reject) => {
+      const invalid = this.newGaurd(serial, uri, contract);
+      if (invalid != null) {
+        reject(invalid);
+        return;
+      }
 
-    if (Platform.OS === 'android') {
-      ReactMds.get(
-        `${URI_PROTOCOL}${serial}${uri}`,
-        JSON.stringify(contract),
-        successCallback,
-        errorCallback
-      );
-    } else {
-      ReactMds.get(
-        `${URI_PROTOCOL}${serial}${uri}`,
-        contract,
-        (_, r) => successCallback(r),
-        (_, r) => errorCallback(r)
-      );
-    }
-  };
+      if (Platform.OS === 'android') {
+        ReactMds.get(
+          `${URI_PROTOCOL}${serial}${uri}`,
+          JSON.stringify(contract),
+          (r) => this.resolveHandler(resolve, r),
+          (r) => this.rejectHandler(reject, r)
+        );
+      } else {
+        ReactMds.get(
+          `${URI_PROTOCOL}${serial}${uri}`,
+          contract,
+          (_, r) => this.resolveHandler(resolve, r),
+          (_, r) => this.rejectHandler(reject, r)
+        );
+      }
+    });
+  }
 
-  put = (
+  put<TRequest, TResponse>(
     serial: string,
-    uri: string,
-    contract: any,
-    successCallback: MethodCallback,
-    errorCallback: MethodCallback
-  ) => {
-    this.gaurd(serial, uri, contract, successCallback, errorCallback);
+    uri: UriTypes,
+    contract: TRequest
+  ): Promise<TResponse> {
+    return new Promise((resolve, reject) => {
+      const invalid = this.newGaurd(serial, uri, contract);
+      if (invalid != null) {
+        reject(invalid);
+        return;
+      }
 
-    //! TODO: keep an eye
-    // This seems the opposite to get
+      if (Platform.OS === 'android') {
+        ReactMds.put(
+          `${URI_PROTOCOL}${serial}${uri}`,
+          JSON.stringify(contract),
+          (_, r) => this.resolveHandler(resolve, r),
+          (_, r) => this.rejectHandler(reject, r)
+        );
+      } else {
+        ReactMds.put(
+          `${URI_PROTOCOL}${serial}${uri}`,
+          contract,
+          (r) => this.resolveHandler(resolve, r),
+          (r) => this.rejectHandler(reject, r)
+        );
+      }
+    });
+  }
 
-    if (Platform.OS === 'android') {
-      ReactMds.put(
-        `${URI_PROTOCOL}${serial}${uri}`,
-        JSON.stringify(contract),
-        (_, r) => successCallback(r),
-        (_, r) => errorCallback(r)
-      );
-    } else {
-      ReactMds.put(
-        `${URI_PROTOCOL}${serial}${uri}`,
-        contract,
-        successCallback,
-        errorCallback
-      );
-    }
-  };
-
-  post = (
+  post<TRequest, TResponse>(
     serial: string,
-    uri: string,
-    contract: any,
-    successCallback: MethodCallback,
-    errorCallback: MethodCallback
-  ) => {
-    this.gaurd(serial, uri, contract, successCallback, errorCallback);
+    uri: UriTypes,
+    contract: TRequest
+  ): Promise<TResponse> {
+    return new Promise((resolve, reject) => {
+      const invalid = this.newGaurd(serial, uri, contract);
+      if (invalid != null) {
+        reject(invalid);
+        return;
+      }
 
-    if (Platform.OS === 'android') {
-      ReactMds.post(
-        `${URI_PROTOCOL}${serial}${uri}`,
-        JSON.stringify(contract),
-        successCallback,
-        errorCallback
-      );
-    } else {
-      ReactMds.post(
-        `${URI_PROTOCOL}${serial}${uri}`,
-        contract,
-        successCallback,
-        errorCallback
-      );
-    }
-  };
+      if (Platform.OS === 'android') {
+        ReactMds.post(
+          `${URI_PROTOCOL}${serial}${uri}`,
+          JSON.stringify(contract),
+          (r) => this.resolveHandler(resolve, r),
+          (r) => this.rejectHandler(reject, r)
+        );
+      } else {
+        ReactMds.post(
+          `${URI_PROTOCOL}${serial}${uri}`,
+          contract,
+          (r) => this.resolveHandler(resolve, r),
+          (r) => this.rejectHandler(reject, r)
+        );
+      }
+    });
+  }
 
-  delete = (
+  delete<TRequest, TResponse>(
     serial: string,
-    uri: string,
-    contract: any,
-    successCallback: MethodCallback,
-    errorCallback: MethodCallback
-  ) => {
-    this.gaurd(serial, uri, contract, successCallback, errorCallback);
+    uri: UriTypes,
+    contract: TRequest
+  ): Promise<TResponse> {
+    return new Promise((resolve, reject) => {
+      const invalid = this.newGaurd(serial, uri, contract);
+      if (invalid != null) {
+        reject(invalid);
+        return;
+      }
 
-    if (Platform.OS === 'android') {
-      ReactMds.delete(
-        `${URI_PROTOCOL}${serial}${uri}`,
-        JSON.stringify(contract),
-        successCallback,
-        errorCallback
-      );
-    } else {
-      ReactMds.delete(
-        `${URI_PROTOCOL}${serial}${uri}`,
-        contract,
-        successCallback,
-        errorCallback
-      );
-    }
-  };
+      if (Platform.OS === 'android') {
+        ReactMds.delete(
+          `${URI_PROTOCOL}${serial}${uri}`,
+          JSON.stringify(contract),
+          (r) => this.resolveHandler(resolve, r),
+          (r) => this.rejectHandler(reject, r)
+        );
+      } else {
+        ReactMds.delete(
+          `${URI_PROTOCOL}${serial}${uri}`,
+          contract,
+          (r) => this.resolveHandler(resolve, r),
+          (r) => this.rejectHandler(reject, r)
+        );
+      }
+    });
+  }
 
   subscribe = (
     serial: string,
-    uri: string,
+    uri: UriTypes,
     contract: any,
     successCallback: Callback,
     errorCallback: Callback
@@ -283,26 +296,17 @@ class MDS {
     return true;
   };
 
-  getTime = (serial: string) => {
-    return new Promise<TimeResponse>((resolve, reject) => {
-      if (serial == null) {
-        reject('Serial is missing');
-      }
+  private resolveHandler<TResponse>(
+    resolve: (response: TResponse) => void,
+    response: string
+  ) {
+    const json = JSON.parse(response) as TResponse;
+    resolve(json);
+  }
 
-      this.get(
-        serial,
-        '/time',
-        {},
-        (res) => {
-          var jsonRes = JSON.parse(res) as TimeResponse;
-          resolve(jsonRes);
-        },
-        (err) => {
-          reject(err);
-        }
-      );
-    });
-  };
+  private rejectHandler(reject: (response: string) => void, response: string) {
+    reject(response);
+  }
 
   private executeCallback = (
     callbacks: Callback[],
@@ -342,6 +346,18 @@ class MDS {
     ReactMds.eventEmitter.removeAllListeners(NEW_NOTIFICATION);
     ReactMds.eventEmitter.removeAllListeners(NEW_NOTIFICATION_ERROR);
   };
+
+  private newGaurd(serial: string, uri: string, contract?: any) {
+    if (serial == null) {
+      return 'Serial is invalid';
+    } else if (uri == null) {
+      return 'Uri is invalid';
+    } else if (typeof contract !== 'undefined' && contract == null) {
+      return 'Contact is invalid';
+    }
+
+    return null;
+  }
 
   private gaurd = (
     serial: string,

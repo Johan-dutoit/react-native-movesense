@@ -93,56 +93,16 @@ movesense.connect(address);
 movesense.disconnect(address);
 
 // Get a resource
-movesense.get(
-  serial,
-  resource,
-  contract,
-  (response) => {
-    this.onResponse(response);
-  },
-  (error) => {
-    this.onError(error);
-  }
-);
+const response = await movesense.get(serial, resource, contract);
 
 // Put a resource
-movesense.put(
-  serial,
-  resource,
-  contract,
-  (response) => {
-    this.onResponse(response);
-  },
-  (error) => {
-    this.onError(error);
-  }
-);
+const response = await movesense.put(serial, resource, contract);
 
 // Post a resource
-movesense.post(
-  serial,
-  resource,
-  contract,
-  (response) => {
-    this.onResponse(response);
-  },
-  (error) => {
-    this.onError(error);
-  }
-);
+const response = await movesense.post(serial, resource, contract);
 
 // Del a resource
-movesense.del(
-  serial,
-  resource,
-  contract,
-  (response) => {
-    this.onResponse(response);
-  },
-  (error) => {
-    this.onError(error);
-  }
-);
+const response = await movesense.del(serial, resource, contract);
 
 // Subscribes to movesense notifications
 movesense.setNotificationHandlers();

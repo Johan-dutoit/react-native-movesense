@@ -8,32 +8,32 @@ export interface ReactMdsNativeModule {
 
   get: (
     address: string,
-    contract: string,
+    contract: any,
     successCallback: Callback,
     errorCallback: Callback
   ) => void;
 
   put: (
     address: string,
-    contract: string,
+    contract: any,
     successCallback: Callback,
     errorCallback: Callback
   ) => void;
 
   post: (
     address: string,
-    contract: string,
+    contract: any,
     successCallback: Callback,
     errorCallback: Callback
   ) => void;
 
   delete: (
     address: string,
-    contract: string,
+    contract: any,
     successCallback: Callback,
     errorCallback: Callback
   ) => void;
 
-  subscribe: (address: string, contract: string, subsKey: string) => void;
+  subscribe: (address: string, contract: any, subsKey: string) => void;
   unsubscribe: (subsKey: string) => void;
 }
