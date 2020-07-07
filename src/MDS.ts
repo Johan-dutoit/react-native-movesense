@@ -10,6 +10,8 @@ import {
   ScanHandler,
   MethodCallback,
   UriTypes,
+  ContentResponse,
+  Request,
 } from './types';
 
 const URI_PROTOCOL = 'suunto://';
@@ -120,11 +122,11 @@ class MDS {
     ReactMds.disconnect(address);
   };
 
-  get<TRequest, TResponse>(
+  get(
     serial: string,
     uri: UriTypes,
-    contract?: TRequest
-  ): Promise<TResponse> {
+    contract?: Request<number>
+  ): Promise<ContentResponse<number>> {
     return new Promise((resolve, reject) => {
       const invalid = this.newGaurd(serial, uri, contract);
       if (invalid != null) {

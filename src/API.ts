@@ -1,17 +1,17 @@
-import { TimeResponse } from './types';
 import MDS from './MDS';
 
 export async function getTime(serial: string) {
-  const time = await MDS.get<null, TimeResponse>(serial, '/Time');
-  return time;
+  const { Content } = await MDS.get(serial, '/Time');
+  return Content;
 }
 
 export async function setTime(serial: string, value: number) {
-  const time = await MDS.put(serial, '/Time', { value });
+  await MDS.put(serial, '/Time', { value });
+  const time = await getTime(serial);
   return time;
 }
 
 export async function getBattery(serial: string) {
-  const batt = await MDS.get(serial, '/System/Energy/Level');
-  return batt;
+  const { Content } = await MDS.get(serial, '/System/Energy/Level');
+  return Content;
 }
