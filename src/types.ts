@@ -39,6 +39,7 @@ export type MDSError = {
 
 export type ScanHandler = (name: string, address: string) => void;
 export type DeviceConnectedHandler = (serial: string) => void;
+export type DeviceConnectFailedHandler = (error: string) => void;
 
 export type Request<T> = {
   value: T;

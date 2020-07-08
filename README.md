@@ -76,13 +76,16 @@ movesense.scan((name, address) => {
 // Stop scanning
 movesense.stopScan();
 
-// Set dis/connection handlers
+// Set handlers
 movesense.setConnectionHandlers(
   (serial) => {
     this.deviceConnected(serial);
   },
   (serial) => {
     this.deviceDisconnected(serial);
+  },
+  () => {
+    this.deviceConnectFailed();
   }
 );
 

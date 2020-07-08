@@ -4,6 +4,7 @@ import ReactMds from './internal/nativeInterfaces';
 import {
   Callback,
   DeviceConnectedHandler,
+  DeviceConnectFailedHandler,
   MDSError,
   MDSEvent,
   NewScannedDeviceCallbackProps,
@@ -38,6 +39,7 @@ class MDS {
   private subscribedToConnectedDevices = false;
   private connectedDevicesSubscription = -1;
 
+  private onDeviceConnectFailed: DeviceConnectFailedHandler | null = null;
   private onDeviceConnected: DeviceConnectedHandler | null = null;
   private onDeviceDisonnected: DeviceConnectedHandler | null = null;
 
@@ -67,9 +69,9 @@ class MDS {
         }
       },
       (error) => {
-        console.log('MDS subscribe error', error);
         this.unsubscribe(this.connectedDevicesSubscription);
         this.subscribedToConnectedDevices = false;
+        this.onDeviceConnectFailed && this.onDeviceConnectFailed(error);
       }
     );
   };
@@ -101,10 +103,12 @@ class MDS {
 
   setConnectionHandlers = (
     deviceConnected: DeviceConnectedHandler,
-    deviceDisconnected: DeviceConnectedHandler
+    deviceDisconnected: DeviceConnectedHandler,
+    deviceConnectFailed: DeviceConnectFailedHandler
   ) => {
     this.onDeviceConnected = deviceConnected;
     this.onDeviceDisonnected = deviceDisconnected;
+    this.onDeviceConnectFailed = deviceConnectFailed;
     if (!this.subscribedToConnectedDevices) {
       this.subscribedToConnectedDevices = true;
       this.subscribeToConnectedDevices();

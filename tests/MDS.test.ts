@@ -59,7 +59,7 @@ describe('movesense tests', () => {
     const successCb = jest.fn(() => {});
     const errorCb = jest.fn(() => {});
 
-    const subKey = movesense.subscribe('test', 'test', {}, successCb, errorCb);
+    const subKey = movesense.subscribe('test', '/Info', {}, successCb, errorCb);
     expect(subKey).toBe(1);
     expect(successCb).toHaveBeenCalledTimes(0);
     expect(errorCb).toHaveBeenCalledTimes(0);
@@ -76,7 +76,7 @@ describe('movesense tests', () => {
     const successCb = jest.fn(() => {});
     const errorCb = jest.fn(() => {});
 
-    const subKey = movesense.subscribe('test', 'test', {}, successCb, errorCb);
+    const subKey = movesense.subscribe('test', '/Info', {}, successCb, errorCb);
 
     movesense.handleNewNotification({
       key: subKey.toString(),
@@ -95,16 +95,25 @@ describe('movesense tests', () => {
   it('handles setConnectionHandlers', () => {
     const deviceConnected = jest.fn();
     const deviceDisconnected = jest.fn();
+    const deviceConnectFailed = jest.fn();
 
     // @ts-ignore
     movesense.subscribedToConnectedDevices = true;
-    movesense.setConnectionHandlers(deviceConnected, deviceDisconnected);
+    movesense.setConnectionHandlers(
+      deviceConnected,
+      deviceDisconnected,
+      deviceConnectFailed
+    );
 
     expect(ReactMds.subscribe).toBeCalledTimes(0);
 
     // @ts-ignore
     movesense.subscribedToConnectedDevices = false;
-    movesense.setConnectionHandlers(deviceConnected, deviceDisconnected);
+    movesense.setConnectionHandlers(
+      deviceConnected,
+      deviceDisconnected,
+      deviceConnectFailed
+    );
 
     expect(ReactMds.subscribe).toBeCalledTimes(1);
   });
