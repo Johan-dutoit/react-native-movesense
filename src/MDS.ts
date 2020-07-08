@@ -55,18 +55,15 @@ class MDS {
 
         const data = JSON.parse(notification) as Notification;
 
+        const serial = data?.Body?.DeviceInfo?.Serial ?? data?.Body?.Serial;
+        if (serial == null) {
+          return null;
+        }
+
         if (data.Method === 'POST') {
-          if (data?.Body?.DeviceInfo?.Serial != null) {
-            this.onDeviceConnected &&
-              this.onDeviceConnected(data.Body.DeviceInfo.Serial);
-          } else if (data?.Body?.Serial != null) {
-            this.onDeviceConnected && this.onDeviceConnected(data.Body.Serial);
-          }
+          this.onDeviceConnected && this.onDeviceConnected(serial);
         } else if (data.Method === 'DEL') {
-          if (data?.Body?.Serial != null) {
-            this.onDeviceDisonnected &&
-              this.onDeviceDisonnected(data.Body.Serial);
-          }
+          this.onDeviceDisonnected && this.onDeviceDisonnected(serial);
         }
       },
       (error) => {
